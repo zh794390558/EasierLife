@@ -10,27 +10,18 @@ except:
 
 def get_response(msg, storageClass = None, userName = None, userid = 'ItChat'):
     url = 'http://www.tuling123.com/openapi/api'
-    if isinstance(msg, str):
-        msg = msg.decode('utf-8')
-        print(type(msg))
-
     payloads = {
         'key': key,
         'info': msg,
         'userid': userid,
     }
     try:
-        #r = requests.post(url, data = json.dumps(payloads)).json()
-        r = requests.post(url, data = payloads).json()
+        r = requests.post(url, data = json.dumps(payloads)).json()
     except:
         return
-
-    print(type(r))
-
     if not r['code'] in (100000, 200000, 302000, 308000, 313000, 314000): return
     if r['code'] == 100000: # 文本类
-        #return '\n'.join([r['text'].replace('<br>','\n')])
-        return r.get('text').encode('utf-8')
+        return '\n'.join([r['text'].replace('<br>','\n')])
     elif r['code'] == 200000: # 链接类
         return '\n'.join([r['text'].replace('<br>','\n'), r['url']])
     elif r['code'] == 302000: # 新闻类
@@ -49,11 +40,9 @@ def get_response(msg, storageClass = None, userName = None, userid = 'ItChat'):
 if __name__ == '__main__':
     try:
         ipt = raw_input
-        #ipt = lambda: raw_input('>').decode(sys.stdin.encoding)
+        ipt = lambda: raw_input('>').decode(sys.stdin.encoding)
     except:
         ipt = lambda: input('>')
     while True:
         a = ipt()
-        print(a)
-        print(type(a))
         print(get_response(a, 'ItChat'))
